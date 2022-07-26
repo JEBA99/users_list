@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import './App.css';
-import { Grid, Card, Box, Avatar, Stack, Typography, IconButton, Divider, Chip, Switch, Button, Modal, FormControl, InputLabel, Input, FormHelperText, setRef } from '@mui/material'
+import { Grid, Card, Box, Avatar, Stack, Typography, IconButton, Divider, Chip, Switch, Button, Modal, FormControl, InputLabel, Input, FormHelperText, setRef, AppBar, Container, Toolbar, MenuItem, Tooltip, Menu, Pagination, TextField, InputAdornment } from '@mui/material'
 import { LocationOn, Edit } from '@mui/icons-material';
+import AdbIcon from '@mui/icons-material/Adb';
+import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from "@mui/icons-material/Search";
 import { grey } from '@mui/material/colors';
 import avatarImage1 from './AvatarImages/avatar1.jpg';
 
@@ -27,6 +30,28 @@ function App() {
   const [users, setUsers] = React.useState([]);
   const [isEdit, setIsEdit] = React.useState(false);
   const [recordIndex, setRecordIndex] = React.useState("");
+  const pages = ['Dashboard', 'Docs', 'Clients', 'Doc types', 'Users'];
+  const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+  
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
   const handleOpen = () => { 
     setOpen(true);
     setUserName("");
@@ -92,12 +117,148 @@ function App() {
     setUserDetail(userDetailObject);
   }
 
-  return (
-  <Grid container justify="center" spacing={spacing}>
+  return (  
+    <Box>
+    <AppBar position="static">
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            LOGO
+          </Typography>
+
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+              }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href=""
+            sx={{
+              mr: 2,
+              display: { xs: 'flex', md: 'none' },
+              flexGrow: 1,
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            LOGO
+          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {page}
+              </Button>
+            ))}
+          </Box>
+
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
+    <Grid container justify="center" spacing={spacing} sx={{pl: 8, pr: 8, pb: 8, pt: 4}}>
     <Grid item md={12}>
         <Box component="h1" sx={{ m: 2, display: 'inline', float: 'left' }}>Users</Box>
         <Button variant="contained" sx={{ m: 2, display: 'inline', float: 'right' }} onClick={handleOpen}>Create Users</Button>
         <Button variant="outlined" disabled sx={{ m: 2, display: 'inline', float: 'right' }}>Actions</Button>
+    </Grid>
+    <Grid item md={12}>
+      <TextField sx={{w: 1}}
+        label="Search"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment>
+              <IconButton>
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
+      />
     </Grid>
     {users.map((user, index) => (
       <Grid item md={4}>
@@ -159,7 +320,11 @@ function App() {
        </Typography>
      </Box>
    </Modal>
-  </Grid>  
+  </Grid> 
+  <Stack sx={{p: 4}}spacing={2}>
+    <Pagination count={10} variant="outlined" shape="rounded" />  
+  </Stack>
+  </Box> 
   );
 }
 
